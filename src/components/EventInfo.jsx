@@ -1,27 +1,21 @@
-import { useScrollReveal } from './About'
 import CONFIG from '../data/config'
-
-const items = [
-  { value: CONFIG.date, label: 'Event Date' },
-  { value: CONFIG.region, label: 'Event Region' },
-  { value: 'CTF', label: 'Event Format' },
-  { value: 'Colleges & Universities', label: 'Target Community' },
-]
+import useScrollReveal from '../hooks/useScrollReveal'
 
 export default function EventInfo() {
   const ref = useScrollReveal()
 
   return (
-    <section id="event" className="event-info section--darkest" ref={ref}>
-      <div className="event-info__inner">
-        <span className="section-label fade-in">Event</span>
-        <h2 className="section-title fade-in">The Event</h2>
+    <section id="event" className="event-info" ref={ref}>
+      <div className="container">
+        <span className="section-label fade-in">Event Details</span>
+        <h2 className="section-title fade-in">What you need to know</h2>
         <div className="event-info__grid">
-          {items.map((item, i) => (
-            <div key={i} className={`event-info__card fade-in fade-in-delay-${Math.min(i + 1, 3)}`}>
-              <div className="event-info__card-value">{item.value}</div>
-              <div className="event-info__card-label">{item.label}</div>
-            </div>
+          {CONFIG.eventDetails.map((item, i) => (
+            <article key={item.id} className={`info-card fade-in fade-in-delay-${Math.min(i + 1, 3)}`}>
+              <p className="info-card__label">{item.label}</p>
+              <h3 className="info-card__value">{item.value}</h3>
+              <p className="info-card__note">{item.note}</p>
+            </article>
           ))}
         </div>
       </div>

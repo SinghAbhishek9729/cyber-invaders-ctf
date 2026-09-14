@@ -1,77 +1,100 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import CONFIG from '../data/config'
+import RegisterButton from './RegisterButton'
+import WhatsAppButton from './WhatsAppButton'
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
+    const handleScroll = () => setScrolled(window.scrollY > 12)
+    handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
+    document.body.style.overflow = isOpen ? 'hidden' : ''
+    return () => {
       document.body.style.overflow = ''
     }
-    return () => { document.body.style.overflow = '' }
   }, [isOpen])
+
+  const closeMenu = useCallback(() => setIsOpen(false), [])
 
   const handleNavClick = useCallback((e, href) => {
     e.preventDefault()
     setIsOpen(false)
     const target = document.querySelector(href)
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [])
-
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Escape') setIsOpen(false)
+    if (target) target.scrollIntoView({ behavior: 'smooth' })
   }, [])
 
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [handleKeyDown])
+    const onKey = (e) => {
+      if (e.key === 'Escape') setIsOpen(false)
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
 
   return (
     <header className={`header${scrolled ? ' scrolled' : ''}`} role="banner">
       <div className="header__inner">
-        <a href="#home" className="header__logo" aria-label="NIET Greater Noida - Home">
-          <img src={CONFIG.logos.niet} alt="NIET Greater Noida" />
-          <span className="header__logo-divider" aria-hidden="true" />
-          <span className="header__brand-text">CYBER INVADERS</span>
+        <a href="#home" className="header__brand" onClick={(e) => handleNavClick(e, '#home')} aria-label="NIET Cyber Invaders CTF — Home">
+          <img src={CONFIG.logos.niet} alt="NIET Greater Noida" className="header__logo header__logo--niet" />
+          <img src={CONFIG.logos.cyberInvaders} alt="Cyber Invaders Club" className="header__logo header__logo--ci" />
         </a>
 
-        <button
-          className={`hamburger${isOpen ? ' active' : ''}`}
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
-          aria-expanded={isOpen}
-          aria-controls="nav-overlay"
-        >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-        </button>
+        <nav className="header__nav" aria-label="Primary">
+          {CONFIG.navItems.map((item) => (
+            <a key={item.href} href={item.href} className="header__nav-link" onClick={(e) => handleNavClick(e, item.href)}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="header__actions">
+          <RegisterButton className="header__register btn--compact" />
+          <WhatsAppButton className="header__register btn--compact" />
+          <button
+            type="button"
+            className={`hamburger${isOpen ? ' active' : ''}`}
+            onClick={() => setIsOpen((open) => !open)}
+            aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={isOpen}
+            aria-controls="mobile-drawer"
+          >
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+          </button>
+        </div>
       </div>
 
+      <button
+        type="button"
+        className={`nav-backdrop${isOpen ? ' open' : ''}`}
+        aria-hidden={!isOpen}
+        tabIndex={-1}
+        onClick={closeMenu}
+      />
+
       <nav
-        id="nav-overlay"
-        className={`nav-overlay${isOpen ? ' open' : ''}`}
-        role="navigation"
-        aria-label="Main navigation"
+        id="mobile-drawer"
+        className={`nav-drawer${isOpen ? ' open' : ''}`}
+        aria-label="Mobile"
       >
-        <ul className="nav-overlay__list">
+        <div className="nav-drawer__brand">
+          <img src={CONFIG.logos.niet} alt="" className="header__logo header__logo--niet" />
+          <img src={CONFIG.logos.cyberInvaders} alt="" className="header__logo header__logo--ci" />
+        </div>
+        <ul className="nav-drawer__list">
           {CONFIG.navItems.map((item) => (
-            <li key={item.href} className="nav-overlay__item">
+            <li key={item.href}>
               <a
                 href={item.href}
-                className="nav-overlay__link"
+                className="nav-drawer__link"
                 onClick={(e) => handleNavClick(e, item.href)}
                 tabIndex={isOpen ? 0 : -1}
               >
@@ -80,7 +103,10 @@ export default function Header() {
             </li>
           ))}
         </ul>
-        <p className="nav-overlay__tagline" aria-hidden="true">{CONFIG.tagline}</p>
+        <div className="nav-drawer__cta">
+          <RegisterButton className="btn--block" />
+          <WhatsAppButton className="btn--block" />
+        </div>
       </nav>
     </header>
   )

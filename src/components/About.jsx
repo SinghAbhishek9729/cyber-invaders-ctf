@@ -1,57 +1,33 @@
-import { useRef, useEffect } from 'react'
-
-function useScrollReveal() {
-  const ref = useRef(null)
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.querySelectorAll('.fade-in').forEach((el) => {
-              el.classList.add('visible')
-            })
-          }
-        })
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-    )
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
-  return ref
-}
+import useScrollReveal from '../hooks/useScrollReveal'
 
 export default function About() {
   const ref = useScrollReveal()
 
   return (
-    <section id="about" className="about section--darker" ref={ref}>
-      <div className="about__content">
-        <span className="section-label fade-in">About</span>
-        <h2 className="section-title fade-in">About the Competition</h2>
+    <section id="about" className="about section-light" ref={ref}>
+      <div className="container about__grid">
+        <div>
+          <span className="section-label fade-in">About the Event</span>
+          <h2 className="section-title fade-in">NIET Cyber Invaders CTF Hackathon</h2>
+        </div>
         <div className="about__text fade-in fade-in-delay-1">
           <p>
             <strong>Cyber Invaders CTF</strong> is a student-focused cybersecurity competition
-            designed to challenge participants through problem solving, security analysis,
-            investigation and hands-on technical challenges. The competition brings together
-            students from diverse technical backgrounds to test their skills in a structured,
-            competitive environment.
+            designed around Capture The Flag challenges. Teams work through security puzzles,
+            investigate digital evidence, and compete on a shared scoreboard.
           </p>
           <p>
-            Organized by the <strong>NIET Cyber Invaders Club</strong>, this event is intended to
-            connect students across colleges and universities in Greater Noida — creating a shared
-            platform for learning, collaboration, and friendly competition in the field of
-            cybersecurity.
+            The event is organized by the <strong>NIET Cyber Invaders Club</strong> at the
+            Noida Institute of Engineering and Technology, Greater Noida. It is intended as a
+            campus platform for learning, collaboration, and ethical competition.
           </p>
           <p>
-            Whether you're just beginning to explore security concepts or already competing in CTFs,
-            Cyber Invaders CTF offers a range of challenges designed to test analytical thinking,
-            technical depth, and creative problem-solving at every level.
+            Official schedule, prize details, and registration logistics will be published as
+            they are confirmed. Until then, this website is the home for the event identity,
+            structure, and updates.
           </p>
         </div>
       </div>
     </section>
   )
 }
-
-export { useScrollReveal }

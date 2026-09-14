@@ -1,28 +1,49 @@
 import CONFIG from '../data/config'
+import RegisterButton from './RegisterButton'
+import WhatsAppButton from './WhatsAppButton'
 
 export default function Footer() {
   return (
     <footer className="footer" role="contentinfo">
-      <div className="footer__inner">
-        <div className="footer__top">
+      <div className="container footer__grid">
+        <div className="footer__brand">
           <div className="footer__logos">
-            <img src={CONFIG.logos.niet} alt="NIET" className="footer__logo" />
-            <img src={CONFIG.logos.cyberInvaders} alt="Cyber Invaders" className="footer__logo footer__logo--ci" />
+            <img src={CONFIG.logos.niet} alt="NIET" />
+            <img src={CONFIG.logos.cyberInvaders} alt="Cyber Invaders" className="footer__ci" />
           </div>
-          <p className="footer__brand">NIET CYBER INVADERS CLUB</p>
-          <p className="footer__tagline">{CONFIG.tagline}</p>
-          <p className="footer__meta">{CONFIG.date} | {CONFIG.region}</p>
+          <p className="footer__name">{CONFIG.organizer}</p>
+          <p className="footer__copy">{CONFIG.institution}</p>
+          <p className="footer__copy">{CONFIG.venue.full}</p>
         </div>
-        <nav className="footer__nav" aria-label="Footer navigation">
-          {CONFIG.navItems.map((item) => (
-            <a key={item.href} href={item.href} className="footer__nav-link">
-              {item.label}
-            </a>
-          ))}
-        </nav>
-        <p className="footer__copyright">
-          © {CONFIG.copyrightYear} {CONFIG.organizer}. All rights reserved.
-        </p>
+
+        <div>
+          <h3 className="footer__heading">Quick links</h3>
+          <nav className="footer__links" aria-label="Footer">
+            {CONFIG.navItems.map((item) => (
+              <a key={item.href} href={item.href}>{item.label}</a>
+            ))}
+          </nav>
+        </div>
+
+        <div>
+          <h3 className="footer__heading">Event</h3>
+          <ul className="footer__meta">
+            <li>{CONFIG.eventName}</li>
+            <li>Date: {CONFIG.dateShort}</li>
+            <li>Registration: {CONFIG.registrationStatus}</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="footer__heading">Get involved</h3>
+          <RegisterButton className="btn--compact" />
+          <WhatsAppButton className="btn--compact" />
+          <p className="footer__hint">Official social channels will be linked here.</p>
+        </div>
+      </div>
+      <div className="container footer__bottom">
+        <p>© {CONFIG.copyrightYear} {CONFIG.organizer}. {CONFIG.institutionShort}.</p>
+        <p>{CONFIG.clubTagline}</p>
       </div>
     </footer>
   )
